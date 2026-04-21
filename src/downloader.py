@@ -2,6 +2,7 @@
 import yaml
 import sys
 import json
+import requests
 from pathlib import Path
 from label_studio_sdk import LabelStudio
 from label_studio_sdk.core import ApiError
@@ -91,6 +92,37 @@ def save_tasks(tasks, output_dir, project_id):
     print(f"  Saved {len(serializable)} task(s) to '{output_file}'")
     return output_file
 
+def download_images(tasks,api_key,url,output_dir):
+    
+    out_path = Path(output_dir)
+    out_path.mkdir(parents=True, exist_ok=True)
+    download,skipped = 0,0
+    
+    for task in tasks:
+        image_path = task.data.get("image")
+        if not image_path:
+            continue
+        
+        filename = image_path.split("/")[-1].split("?d=")[-1].split("/")[-1]
+        
+        response = requests.get(
+            f"{url}{image_path}",
+            headers={"Authorization": f"Token {api_key}"}
+        )
+        
+        if response.status_code == 200:
+            save_path = out_path / filename
+            with open(save_path, "wb") as f:
+                f.write(response.content)
+            print(f"Saved: {save_path}")
+            download +=1
+
+        else:
+            print(f"Error when Saving")
+            skipped +=1
+        
+    print(f"downloaded: {download}, skipped: {skipped}")
+
 def main():
     conf = load_conf()
     
@@ -105,6 +137,7 @@ def main():
         print("  No tasks to save. Exiting.")
         sys.exit(0)
     save_tasks(tasks, conf['output_dir'], conf['project_id'])
+    download_images(tasks,conf["api_key"],conf["url"],conf["output_dir"])
     print("\n  Download complete.")
 
 main()
