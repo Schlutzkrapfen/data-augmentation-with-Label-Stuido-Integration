@@ -8,8 +8,7 @@ from label_studio_sdk import LabelStudio
 from label_studio_sdk.core import ApiError
 
 def load_conf(file_path="config.yml"):
-    '''loads config with url,api key, project id, output dir, only completed'''
-
+    '''loads config with url,api key,project id, output dir, only completed'''
     try:
         with open(file_path, "r") as f:
             config = yaml.safe_load(f)
@@ -33,7 +32,7 @@ def load_conf(file_path="config.yml"):
         sys.exit(1)
 
 def connect_label_studio(base_url, api_key, project_id):
-    '''test if a connect to label studio can be made'''
+    '''Checks if it can connect to label studio'''
     if not base_url or not api_key or api_key == "YOUR_API_KEY":
          
         print(" Error: URL or API Key is missing in the config file.")
@@ -41,7 +40,6 @@ def connect_label_studio(base_url, api_key, project_id):
     try:
         client = LabelStudio(base_url=base_url, api_key=api_key)
         
-        # The 'handshake': Try to fetch the project
         project = client.projects.get(id=project_id)
         print(f" Success! Connected to project: '{project.title}' (ID: {project_id})")
         return client
@@ -73,7 +71,7 @@ def fetch_tasks(client, project_id, only_completed=True):
         return []
 
 def save_tasks(tasks, output_dir, project_id):
-    """Save fetched tasks to a JSON file inside output_dir."""
+    """Save fetched tasks to a JSON file inside output_dir. reuterns path"""
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
 
@@ -114,7 +112,6 @@ def download_images(tasks,api_key,url,output_dir)-> str:
             f"{url}{image_path}",
             headers={"Authorization": f"Token {api_key}"}
         )
-        
         if response.status_code == 200:
             save_path = out_path / filename
             with open(save_path, "wb") as f:
@@ -122,7 +119,6 @@ def download_images(tasks,api_key,url,output_dir)-> str:
             print(f"Saved: {save_path}")
             download +=1
             images_paths.append(save_path)
-
         else:
             print(f"Error when Saving")
             skipped +=1

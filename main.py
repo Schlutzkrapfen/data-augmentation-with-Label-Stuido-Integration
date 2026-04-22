@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 from downloader import load_conf,connect_label_studio,fetch_tasks,save_tasks,download_images
-from converter import  adjust_brightness
+from converter import  adjust_brightness, add_labels
 def main():
     conf = load_conf()
     
@@ -16,10 +16,11 @@ def main():
     if not tasks:
         print("No tasks to save. Exiting.")
         sys.exit(0)
-    save_tasks(tasks, conf['output_dir'], conf['project_id'])
+    json_path = save_tasks(tasks, conf['output_dir'], conf['project_id'])
     images_paths= download_images(tasks,conf['api_key'],conf['url'],conf['output_dir'])
-    print("Download complete.")
+    print("\nDownload complete.")
     adjust_brightness(images_paths,0.5)
+    add_labels(json_path,0)
 
 if __name__ == "__main__":
     main()
