@@ -19,8 +19,7 @@ def main():
     json_path = save_tasks(tasks, conf['output_dir'], conf['project_id'])
     images_paths= download_images(tasks,conf['api_key'],conf['url'],conf['output_dir'])
     print("\nDownload complete.")
-    adjust_brightness(images_paths,0.5)
-    add_labels(json_path,0)
+    adjust_brightness(images_paths,json_path,0.5)
 
 if __name__ == "__main__":
     main()
