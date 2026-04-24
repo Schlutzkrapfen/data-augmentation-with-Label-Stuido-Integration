@@ -1,3 +1,5 @@
 pyyaml
 label-studio-sdk
 pathlib
+scipy
+nicegui

@@ -7,6 +7,27 @@ from pathlib import Path
 from label_studio_sdk import LabelStudio
 from label_studio_sdk.core import ApiError
 
+def load_picture_conf(file_path="config.yml"):
+    '''loads pictureSetting with brightness'''
+    try:
+        with open(file_path, "r") as f:
+            config = yaml.safe_load(f)
+
+        brightness = config.get('brightness', {})
+        guass = config.get('guass',{})
+        return {
+            "picture_brightness": brightness.get('brigtness_list'),
+            "brightness_combination": brightness.get('brigtness_combination'),
+            "guass_strength": guass.get('guass_list'),
+            "guass_combination": guass.get('guass_combination')
+        }
+    except FileNotFoundError:
+        print(f" Error: The file '{file_path}' was not found.")
+        sys.exit(1)
+    except yaml.YAMLError as e:
+        print(f" Error: Failed to parse YAML file: {e}")
+        sys.exit(1)
+
 def load_conf(file_path="config.yml"):
     '''loads config with url,api key,project id, output dir, only completed'''
     try:
@@ -94,7 +115,7 @@ def save_tasks(tasks, output_dir, project_id):
     return output_file
 
 def download_images(tasks,api_key,url,output_dir)-> str:
-    '''Downloads all the Images'''
+    '''Downloads all the Images and returns their path'''
     
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
