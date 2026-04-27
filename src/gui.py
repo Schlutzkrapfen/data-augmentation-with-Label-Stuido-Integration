@@ -18,7 +18,7 @@ def set_up_gui(on_start=None):
 def save_setup_conf(conf: dict, path: str = "config.yml"):
     try:
         with open(path, 'w') as f:
-            yaml.dump(conf, f, default_flow_style=False)
-        print("worked")
+            yaml.dump(conf, f, default_flow_style=False, sort_keys=False, default_style=None)
+        print("Save worked")
     except Exception as e:
         print(f"Save failed: {e}")

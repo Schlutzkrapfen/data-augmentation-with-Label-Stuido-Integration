@@ -23,13 +23,17 @@ def load_picture_conf(file_path="config.yml"):
     """Loads picture settings with brightness and gauss."""
     config = load_config(file_path)
     brightness = config.get('brightness', {})
-    gauss = config.get('gauss', {})  # also a typo: 'guass' → 'gauss'
-    return {
-        "picture_brightness":     brightness.get('brightness_list'),
+    gauss = config.get('gauss', {})  
+    result=  {
+        "picture_brightness":     brightness.get('brigtness_list'),
         "brightness_combination": brightness.get('brightness_combination'),
         "gauss_strength":         gauss.get('gauss_list'),
         "gauss_combination":      gauss.get('gauss_combination'),
     }
+    missing = [k for k, v in result.items() if v is None]
+    if missing:
+        print(f"Warning: missing config keys: {missing}")
+    return result
 
 def is_valid_json(path):
     try:

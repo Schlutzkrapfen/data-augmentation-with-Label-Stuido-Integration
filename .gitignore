@@ -420,7 +420,8 @@ FodyWeavers.xsd
 
 #config file
 config.yml
+config.yaml
 
 #output
 output/*
-config.yaml
+

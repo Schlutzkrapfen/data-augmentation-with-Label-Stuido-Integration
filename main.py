@@ -31,15 +31,16 @@ def run_pipeline():
     changed_list = []
     for brightness in brightness_list:
         changed_list += adjust_brightness(images_paths,json_path,float(brightness))
-    for strength in conf["guass_strength"]:
+    print(conf)
+    for strength in conf["gauss_strength"]:
         add_guasianfilter(images_paths,json_path,strength)
-    if brightness_combination and conf["guass_combination"]:
-        for strength in conf["guass_strength"]:
+    if brightness_combination and conf["gauss_combination"]:
+        for strength in conf["gauss_strength"]:
             add_guasianfilter(changed_list,json_path,strength)
 
 def main():
-    set_up_gui(on_start=run_pipeline)  # pass callback to GUI
+    set_up_gui(on_start=run_pipeline)  
     ui.run()
 if __name__ in {"__main__", "__mp_main__"}:
-    #run_pipeline()
-    main()
+    run_pipeline()
+    #main()
