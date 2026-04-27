@@ -1,0 +1,41 @@
+local:
+  #if the files are stored locally or should use label Studio Api
+  local: false
+  #Picture Folder for local Images
+  picture_path: ""
+  #Exact Path for json file
+  json_path: ""
+  #where the pictures shoudl be stored
+  output_label_studio:  ""
+
+label_studio:
+  # The base URL where your Label Studio instance is running
+  url: ""
+
+  # Your API key — either a Personal Access Token (PAT) or legacy access token
+  # Find it under Account & Settings → Access Token in the Label Studio UI
+  api_key: ""
+
+  # The numeric ID of the project you want to download images from
+  # You can find it in the URL: /projects/<project_id>/
+  project_id: 3
+
+download:
+  # Folder where downloaded images will be saved
+  output_dir: "output/"
+
+  # Set to true to only download tasks that have been fully annotated/completed
+  # Set to false to download all tasks regardless of annotation status
+  only_completed: true
+
+brightness:
+  #Brigtnesslist
+  brigtness_list: [1.5]
+  #can used in combination with other formats
+  brightness_combination: true
+
+gauss:
+  gauss_list: [1]
+  #can used in combination with other formats
+  guass_combination: true
+
