@@ -10,7 +10,7 @@ def add_labels(path_to_labels,id,file_name):
         data.append(changed_result)
     with open(path_to_labels, 'w') as f:
         json.dump(data, f, indent=4)
-        print("   added the json to the file")
+        print("   added the task to the json")
 
 def get_picture_label(path_to_labels,id):
     with open(path_to_labels, "r") as f:

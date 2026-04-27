@@ -7,26 +7,29 @@ from pathlib import Path
 from label_studio_sdk import LabelStudio
 from label_studio_sdk.core import ApiError
 
-def load_picture_conf(file_path="config.yml"):
-    '''loads pictureSetting with brightness'''
+def load_config(file_path="config.yml"):
+    """Loads and returns the full config dict."""
     try:
         with open(file_path, "r") as f:
-            config = yaml.safe_load(f)
-
-        brightness = config.get('brightness', {})
-        guass = config.get('guass',{})
-        return {
-            "picture_brightness": brightness.get('brigtness_list'),
-            "brightness_combination": brightness.get('brigtness_combination'),
-            "guass_strength": guass.get('guass_list'),
-            "guass_combination": guass.get('guass_combination')
-        }
+            return yaml.safe_load(f)
     except FileNotFoundError:
-        print(f" Error: The file '{file_path}' was not found.")
+        print(f"Error: The file '{file_path}' was not found.")
         sys.exit(1)
     except yaml.YAMLError as e:
-        print(f" Error: Failed to parse YAML file: {e}")
+        print(f"Error: Failed to parse YAML file: {e}")
         sys.exit(1)
+
+def load_picture_conf(file_path="config.yml"):
+    """Loads picture settings with brightness and gauss."""
+    config = load_config(file_path)
+    brightness = config.get('brightness', {})
+    gauss = config.get('gauss', {})  # also a typo: 'guass' → 'gauss'
+    return {
+        "picture_brightness":     brightness.get('brightness_list'),
+        "brightness_combination": brightness.get('brightness_combination'),
+        "gauss_strength":         gauss.get('gauss_list'),
+        "gauss_combination":      gauss.get('gauss_combination'),
+    }
 
 def is_valid_json(path):
     try:
@@ -37,34 +40,26 @@ def is_valid_json(path):
         return False
 
 
-def load_conf(file_path="config.yml"):
+def load_setup_conf(file_path="config.yml"):
     '''loads config with url,api key,project id, output dir, only completed'''
-    try:
-        with open(file_path, "r") as f:
-            config = yaml.safe_load(f)
-        
-        # Using .get() prevents KeyError if a section is missing(
-        lo_section = config.get('local',{})
-        ls_section = config.get('label_studio', {})
-        dl_section = config.get('download', {})
+   
+    config = load_config(file_path)
+    lo_section = config.get('local',{})
+    ls_section = config.get('label_studio', {})
+    dl_section = config.get('download', {})
 
-        return {
-            "local": lo_section.get('local',False),
-            "json_path": lo_section.get('json_path'),
-            "picture_path": lo_section.get('picture_path'),
+    return {
+        "local": lo_section.get('local',False),
+        "json_path": lo_section.get('json_path'),
+        "picture_path": lo_section.get('picture_path'),
 
-            "url": ls_section.get('url'),
-            "api_key": ls_section.get('api_key'),
-            "project_id": ls_section.get('project_id'),
-            "output_dir": dl_section.get('output_dir', 'downloads'),
-            "only_completed": dl_section.get('only_completed', True)
-        }
-    except FileNotFoundError:
-        print(f" Error: The file '{file_path}' was not found.")
-        sys.exit(1)
-    except yaml.YAMLError as e:
-        print(f" Error: Failed to parse YAML file: {e}")
-        sys.exit(1)
+        "url": ls_section.get('url'),
+        "api_key": ls_section.get('api_key'),
+        "project_id": ls_section.get('project_id'),
+        "output_dir": dl_section.get('output_dir', 'downloads'),
+        "only_completed": dl_section.get('only_completed', True)
+    }
+  
 
 
 
