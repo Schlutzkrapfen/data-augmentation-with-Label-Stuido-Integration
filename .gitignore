@@ -421,6 +421,7 @@ FodyWeavers.xsd
 #config file
 config.yml
 config.yaml
+*.yaml
 
 #output
 output/*
